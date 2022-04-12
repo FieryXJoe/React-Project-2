@@ -10,6 +10,8 @@ const Modal = (props) => {
     setLastName('');
     setEmail('');
   }
+  const [isErrorVisible, setErrorVisible] = useState(false);
+
   const validateForm = (event) => {
     if(firstName != "" && firstName.length >= 2)
         if(lastName != "" && lastName.length >= 2)
@@ -17,9 +19,18 @@ const Modal = (props) => {
             const regex = "[a-z0-9]+@[a-z]+\.[a-z]{2,3}";
             if(email.match(regex))
             {
+                setErrorVisible(false);
                 clearForm();
+                props.dismissModal();
             }
+            else
+                setErrorVisible(true);
+                
         }
+        else
+            setErrorVisible(true);
+    else
+        setErrorVisible(true);
   }
     return (
         <>
@@ -29,7 +40,9 @@ const Modal = (props) => {
             <input type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
             <br /><br /><label className="form-label">Email</label><br />
             <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-            <br /><br />
+            <br />
+            {isErrorVisible && <label className="form-label" style={{color:"red",fontSize:"20px"}}>Form failed validation</label>}
+            <br />
             <button onClick = {validateForm} className="button">
                 Submit
             </button>
